@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PE-Backed Members | NeuGroup Intelligence</title>
+<style>
+@font-face {
+  font-family: 'HW Cigars';
+  src: url('https://ng-assets-neugroup.s3.us-east-2.amazonaws.com/HW+Cigars+Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Instrument Sans';
+  src: url('https://ng-assets-neugroup.s3.us-east-2.amazonaws.com/InstrumentSans-VariableFont_wdth%2Cwght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ng-deep-blue: #010F1F;
+  --ng-chathams-blue: #143D6B;
+  --ng-regent-blue: #A2C4E0;
+  --ng-golden-yellow: #F2C94C;
+  --ng-white: #FFFFFF;
+  --ng-muddy-waters: #BA9659;
+  --ng-cannon-pink: #7B4C71;
+  --ng-cinnabar: #E6443F;
+  --ng-danube: #6A90D2;
+  --ng-viola: #C086A0;
+  --ng-dingley: #717B4C;
+  --ng-pine-glade: #C7C98D;
+  --ng-font-heading: 'HW Cigars', Georgia, serif;
+  --ng-font-body: 'Instrument Sans', Verdana, sans-serif;
+
+  /* Light theme tokens */
+  --bg-page: linear-gradient(175deg, #C8DFF0 0%, #ddeef8 28%, #eef5fb 55%, #ffffff 100%);
+  --bg-header: linear-gradient(135deg, #010F1F 0%, #143D6B 60%, #1a4d85 100%);
+  --bg-card: rgba(255,255,255,0.72);
+  --bg-card-hover: rgba(255,255,255,0.95);
+  --border: rgba(20, 61, 107, 0.12);
+  --border-strong: rgba(20, 61, 107, 0.22);
+  --text-primary: #010F1F;
+  --text-secondary: #143D6B;
+  --text-muted: rgba(20,61,107,0.5);
+  --shadow: 0 2px 12px rgba(20,61,107,0.1), 0 1px 3px rgba(20,61,107,0.06);
+  --shadow-hover: 0 8px 28px rgba(20,61,107,0.16), 0 2px 8px rgba(20,61,107,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-page);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: var(--ng-font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ──────────────────────────── */
+.header {
+  background: var(--bg-header);
+  padding: 36px 48px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -60px;
+  width: 320px; height: 320px;
+  border: 70px solid rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 15%;
+  width: 180px; height: 180px;
+  border: 40px solid rgba(162,196,224,0.1);
+  border-radius: 50%;
+}
+.header-inner {
+  position: relative; z-index: 2;
+  max-width: 1420px; margin: 0 auto;
+  display: flex; align-items: flex-end; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.header-left {}
+.header-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--ng-golden-yellow);
+  margin-bottom: 8px;
+}
+.header h1 {
+  font-family: var(--ng-font-heading);
+  font-size: 40px;
+  letter-spacing: -1px;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.header-sub {
+  color: rgba(162,196,224,0.85);
+  font-size: 14px;
+}
+.header-meta {
+  margin-top: 14px;
+  display: flex; gap: 20px; flex-wrap: wrap;
+}
+.header-meta span {
+  font-size: 11px;
+  color: rgba(162,196,224,0.55);
+  letter-spacing: 0.3px;
+}
+.header-meta strong { color: rgba(162,196,224,0.9); }
+.header-badge {
+  background: rgba(242,201,76,0.15);
+  border: 1px solid rgba(242,201,76,0.4);
+  border-radius: 6px;
+  padding: 10px 18px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.header-badge-num {
+  font-family: var(--ng-font-heading);
+  font-size: 38px;
+  color: var(--ng-golden-yellow);
+  line-height: 1;
+  display: block;
+}
+.header-badge-label {
+  font-size: 10px;
+  color: rgba(162,196,224,0.65);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 2px;
+}
+
+/* ── CONTAINER ───────────────────────── */
+.container {
+  max-width: 1420px;
+  margin: 0 auto;
+  padding: 28px 48px 80px;
+}
+
+/* ── INSIGHT BANNER ──────────────────── */
+.insight-banner {
+  background: rgba(255,255,255,0.8);
+  border: 1px solid rgba(242,201,76,0.4);
+  border-left: 4px solid var(--ng-golden-yellow);
+  border-radius: 8px;
+  padding: 16px 22px;
+  margin: 0 0 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: var(--shadow);
+}
+.insight-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.insight-text h3 {
+  font-family: var(--ng-font-heading);
+  font-size: 16px;
+  color: var(--ng-chathams-blue);
+  margin-bottom: 3px;
+}
+.insight-text p {
+  color: rgba(1,15,31,0.7);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.insight-text strong { color: var(--ng-chathams-blue); }
+
+/* ── STATS CARDS ─────────────────────── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 18px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.stat-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 10px 10px 0 0;
+}
+.stat-card:nth-child(1)::after { background: var(--ng-chathams-blue); }
+.stat-card:nth-child(2)::after { background: var(--ng-danube); }
+.stat-card:nth-child(3)::after { background: var(--ng-golden-yellow); }
+.stat-card:nth-child(4)::after { background: var(--ng-muddy-waters); }
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.stat-num {
+  font-family: var(--ng-font-heading);
+  font-size: 44px;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-card:nth-child(1) .stat-num { color: var(--ng-chathams-blue); }
+.stat-card:nth-child(2) .stat-num { color: var(--ng-danube); }
+.stat-card:nth-child(3) .stat-num { color: #c8a100; }
+.stat-card:nth-child(4) .stat-num { color: var(--ng-muddy-waters); }
+.stat-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* ── TWO COLUMN ──────────────────────── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── SECTION HEADER ──────────────────── */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.section-header h2 {
+  font-family: var(--ng-font-heading);
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  color: var(--ng-chathams-blue);
+}
+.section-count {
+  background: rgba(20,61,107,0.1);
+  color: var(--ng-chathams-blue);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+/* ── CHIP FILTERS ────────────────────── */
+.chip-filter-row {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.chip-filter {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 13px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.6);
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: var(--ng-font-body);
+}
+.chip-filter:hover {
+  background: rgba(20,61,107,0.08);
+  border-color: var(--ng-chathams-blue);
+}
+.chip-filter.active {
+  background: var(--ng-chathams-blue);
+  color: #fff;
+  border-color: var(--ng-chathams-blue);
+}
+
+/* ── CONTROLS ────────────────────────── */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.search-box {
+  flex: 1; min-width: 200px;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 9px 14px 9px 36px;
+  color: var(--text-primary);
+  font-family: var(--ng-font-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23143D6B' stroke-width='2' stroke-opacity='0.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 11px center;
+  box-shadow: 0 1px 4px rgba(20,61,107,0.06);
+}
+.search-box:focus {
+  border-color: var(--ng-chathams-blue);
+  box-shadow: 0 0 0 3px rgba(20,61,107,0.1);
+  background-color: #fff;
+}
+.search-box::placeholder { color: rgba(20,61,107,0.35); }
+.filter-select {
+  background: rgba(255,255,255,0.85);
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 9px 14px;
+  color: var(--text-primary);
+  font-family: var(--ng-font-body);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  min-width: 160px;
+  box-shadow: 0 1px 4px rgba(20,61,107,0.06);
+}
+.results-info {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.results-info strong { color: var(--ng-chathams-blue); }
+
+/* ── TABLE ───────────────────────────── */
+.table-wrap {
+  background: rgba(255,255,255,0.65);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.company-table { width: 100%; border-collapse: collapse; }
+.company-table thead tr {
+  background: rgba(20,61,107,0.06);
+  border-bottom: 2px solid rgba(20,61,107,0.15);
+}
+.company-table th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.company-table th:hover { color: var(--ng-chathams-blue); }
+.company-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+.company-table tbody tr:last-child { border-bottom: none; }
+.company-table tbody tr:hover { background: rgba(162,196,224,0.18); }
+.company-table td { padding: 13px 16px; vertical-align: top; }
+
+.company-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ng-deep-blue);
+  margin-bottom: 2px;
+}
+.company-hq {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.company-sector {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ── PE CHIPS ────────────────────────── */
+.pe-firms-cell { display: flex; flex-wrap: wrap; gap: 5px; }
+.pe-chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 4px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.pe-chip.lead {
+  background: rgba(20,61,107,0.1);
+  border-color: rgba(20,61,107,0.25);
+  color: var(--ng-chathams-blue);
+}
+.pe-chip.secondary {
+  background: rgba(162,196,224,0.2);
+  border-color: rgba(162,196,224,0.4);
+  color: rgba(20,61,107,0.6);
+}
+.pe-chip.hf {
+  background: rgba(242,201,76,0.2);
+  border-color: rgba(200,161,0,0.5);
+  color: #8a6b00;
+  font-weight: 700;
+}
+.note-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* ── STATUS BADGES ───────────────────── */
+.status-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+.status-badge.private {
+  background: rgba(106,144,210,0.15);
+  color: #2c5b9c;
+  border: 1px solid rgba(106,144,210,0.3);
+}
+.status-badge.public {
+  background: rgba(113,123,76,0.15);
+  color: #4a5229;
+  border: 1px solid rgba(113,123,76,0.3);
+}
+.status-badge.exited {
+  background: rgba(186,150,89,0.15);
+  color: #7a5c20;
+  border: 1px solid rgba(186,150,89,0.3);
+}
+
+/* ── NO RESULTS ──────────────────────── */
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-style: italic;
+  background: rgba(255,255,255,0.65);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+/* ── RIGHT PANEL ─────────────────────── */
+.right-panel { position: sticky; top: 24px; }
+
+/* ── LEAGUE TABLE ────────────────────── */
+.league-table-wrap {
+  background: rgba(255,255,255,0.78);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.league-head {
+  padding: 16px 18px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.league-title {
+  font-family: var(--ng-font-heading);
+  font-size: 17px;
+  color: var(--ng-chathams-blue);
+  margin-bottom: 3px;
+  display: flex; align-items: center; gap: 7px;
+}
+.league-subtitle {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.league-row {
+  display: flex;
+  align-items: center;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+  transition: background 0.12s;
+  cursor: pointer;
+}
+.league-row:hover { background: rgba(162,196,224,0.18); }
+.league-row:last-child { border-bottom: none; }
+.league-rank {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.league-firm {
+  flex: 1;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.league-firm.hf-firm { color: #8a6b00; }
+.league-bar-wrap { width: 70px; }
+.league-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(20,61,107,0.1);
+  overflow: hidden;
+}
+.league-bar-fill { height: 100%; border-radius: 2px; }
+.league-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ng-chathams-blue);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.member-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  background: rgba(242,201,76,0.25);
+  color: #8a6b00;
+  border: 1px solid rgba(200,161,0,0.35);
+  padding: 1px 5px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── METHODOLOGY ─────────────────────── */
+.methodology {
+  background: rgba(255,255,255,0.65);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 15px 18px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  box-shadow: var(--shadow);
+}
+.methodology strong { color: var(--text-secondary); }
+
+/* ── RESPONSIVE ──────────────────────── */
+@media (max-width: 1100px) {
+  .two-col { grid-template-columns: 1fr; }
+  .right-panel { position: static; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .container { padding: 20px 20px 60px; }
+  .header { padding: 28px 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-eyebrow">NeuGroup Intelligence · Member Research</div>
+      <h1>PE-Backed Member Companies</h1>
+      <div class="header-sub">Private equity ownership mapping across the NeuGroup network</div>
+      <div class="header-meta">
+        <span>Research Date: <strong>March 26, 2026</strong></span>
+        <span>·</span>
+        <span>304 Members Researched</span>
+        <span>·</span>
+        <span>Sources: Company disclosures, press releases, SEC filings</span>
+      </div>
+    </div>
+    <div class="header-badge">
+      <span class="header-badge-num">25</span>
+      <span class="header-badge-label">PE-Backed Found</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── INSIGHT ── -->
+  <div class="insight-banner">
+    <div class="insight-icon">⭐</div>
+    <div class="insight-text">
+      <h3>Key Finding — Hellman &amp; Friedman is both a sponsor AND a NeuGroup member</h3>
+      <p>H&amp;F backs <strong>15 companies</strong> in your network — by far the most concentrated sponsor relationship. They are also directly listed as a NeuGroup member, making them the highest-leverage single relationship to cultivate. A conversation with H&amp;F could open introductions to Applied Systems, athenahealth, Caliber Collision, Checkmarx, Circana, Edelman Financial Engines, Genesys, HUB International, Medline, PointClickCare, Securitas Direct/Verisure, UKG, Zendesk, Zooplus, and Belron.</p>
+    </div>
+  </div>
+
+  <!-- ── STATS ── -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">PE-Backed Members</div>
+      <div class="stat-num">25</div>
+      <div class="stat-desc">Active PE-owned companies identified out of 304 members (~8%)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Distinct PE Sponsors</div>
+      <div class="stat-num">30</div>
+      <div class="stat-desc">PE firms with current or very recent ownership stakes across the network</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">H&amp;F Portfolio Cos.</div>
+      <div class="stat-num">15</div>
+      <div class="stat-desc">Hellman &amp; Friedman — dominant single sponsor; also a NeuGroup member</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Multi-Portfolio Firms</div>
+      <div class="stat-num">7</div>
+      <div class="stat-desc">PE firms with 2+ member companies — highest introduction leverage</div>
+    </div>
+  </div>
+
+  <!-- ── TWO-COL ── -->
+  <div class="two-col">
+
+    <!-- LEFT: TABLE -->
+    <div>
+      <div class="section-header">
+        <h2>PE-Backed Members</h2>
+        <span class="section-count" id="section-count">25 companies</span>
+      </div>
+
+      <div class="chip-filter-row">
+        <button class="chip-filter active" onclick="setChip('all',this)">All (25)</button>
+        <button class="chip-filter" onclick="setChip('hf',this)">H&amp;F Backed (15)</button>
+        <button class="chip-filter" onclick="setChip('private',this)">Private Only</button>
+        <button class="chip-filter" onclick="setChip('public',this)">Recently Public</button>
+        <button class="chip-filter" onclick="setChip('tech',this)">Software / Tech</button>
+        <button class="chip-filter" onclick="setChip('services',this)">Services</button>
+      </div>
+
+      <div class="controls">
+        <input class="search-box" id="searchInput" type="text"
+          placeholder="Search by company, PE firm, or sector…" oninput="filterTable()">
+        <select class="filter-select" onchange="sortTable(this.value)">
+          <option value="alpha">Sort A–Z</option>
+          <option value="sponsors">Most Sponsors</option>
+          <option value="sector">By Sector</option>
+          <option value="status">By Status</option>
+        </select>
+      </div>
+
+      <div class="results-info" id="resultsInfo">Showing <strong>25</strong> of 25 companies</div>
+
+      <div class="table-wrap">
+        <table class="company-table">
+          <thead>
+            <tr>
+              <th onclick="sortTable('alpha')">Company ↕</th>
+              <th onclick="sortTable('sector')">Sector ↕</th>
+              <th>PE Sponsor(s)</th>
+              <th onclick="sortTable('status')">Status ↕</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="no-results" id="noResults" style="display:none;">No companies match your filter.</div>
+    </div>
+
+    <!-- RIGHT: PANEL -->
+    <div class="right-panel">
+      <div class="league-table-wrap">
+        <div class="league-head">
+          <div class="league-title">🏆 PE Firm League Table</div>
+          <div class="league-subtitle">Click any firm to filter the table</div>
+        </div>
+        <div id="leagueRows"></div>
+      </div>
+
+      <div class="methodology">
+        <strong>Research Notes:</strong><br>
+        Based on confirmed public disclosures as of March 2026. Worldpay was sold to Global Payments (Jan 2026) and is marked "PE Exited." Medline (Nasdaq: MDLN) and Ingram Micro (NYSE: INGM) recently IPO'd but PE sponsors retain significant stakes. Creative Artists Agency is owned by Artémis (Pinault family holding company), included as private-equity-like. Minority stakes noted where lead investor differs.
+      </div>
+    </div>
+
+  </div><!-- end two-col -->
+</div><!-- end container -->
+
+<script>
+const DATA = [
+  { company:"Action", sector:"Non-Food Retail", hq:"Netherlands", sponsors:[{name:"3i Group",lead:true,hf:false}], status:"private", hfBacked:false, tags:["services"] },
+  { company:"Applied Systems", sector:"Insurance Software", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"Stone Point Capital",lead:false,hf:false},{name:"JMI Equity",lead:false,hf:false},{name:"CapitalG",lead:false,hf:false}], status:"private", hfBacked:true, tags:["tech"] },
+  { company:"athenahealth", sector:"Healthcare IT", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"Bain Capital",lead:true,hf:false}], status:"private", hfBacked:true, tags:["tech"] },
+  { company:"Authentic Brands Group", sector:"Brand Management", hq:"United States", sponsors:[{name:"BlackRock LTPC",lead:true,hf:false},{name:"General Atlantic",lead:false,hf:false},{name:"CVC Capital Partners",lead:false,hf:false},{name:"HPS Investment Partners",lead:false,hf:false},{name:"Leonard Green & Partners",lead:false,hf:false},{name:"Brookfield",lead:false,hf:false}], status:"private", hfBacked:false, tags:["services"] },
+  { company:"Barracuda Networks", sector:"Cybersecurity", hq:"United States", sponsors:[{name:"KKR",lead:true,hf:false}], status:"private", hfBacked:false, tags:["tech"] },
+  { company:"Belron", sector:"Auto Glass / Services", hq:"Belgium", sponsors:[{name:"CD&R",lead:false,hf:false},{name:"Hellman & Friedman",lead:false,hf:true},{name:"GIC",lead:false,hf:false}], status:"private", hfBacked:true, tags:["services"] },
+  { company:"Caliber Collision", sector:"Auto Collision Repair", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"OMERS",lead:false,hf:false},{name:"Leonard Green & Partners",lead:false,hf:false}], status:"private", hfBacked:true, tags:["services"] },
+  { company:"Checkmarx", sector:"App Security", hq:"Israel / United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true}], status:"private", hfBacked:true, tags:["tech"] },
+  { company:"Circana", sector:"Data & Analytics", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"New Mountain Capital",lead:false,hf:false},{name:"Vestar Capital Partners",lead:false,hf:false}], status:"private", hfBacked:true, tags:["tech","services"] },
+  { company:"Creative Artists Agency", sector:"Talent Agency", hq:"United States", sponsors:[{name:"Artémis (Pinault family)",lead:true,hf:false}], status:"private", hfBacked:false, tags:["services"] },
+  { company:"Edelman Financial Engines", sector:"Wealth Management", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"Warburg Pincus",lead:false,hf:false}], status:"private", hfBacked:true, tags:["services"] },
+  { company:"Genesys", sector:"Customer Experience Software", hq:"United States", sponsors:[{name:"Permira",lead:true,hf:false},{name:"Hellman & Friedman",lead:true,hf:true}], status:"private", hfBacked:true, tags:["tech"] },
+  { company:"HUB International", sector:"Insurance Brokerage", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"Altas Partners",lead:false,hf:false},{name:"Leonard Green & Partners",lead:false,hf:false}], status:"private", hfBacked:true, tags:["services"] },
+  { company:"Ingram Micro", sector:"IT Distribution", hq:"United States", sponsors:[{name:"Platinum Equity",lead:true,hf:false}], status:"public", note:"NYSE: INGM (IPO Oct 2024) — Platinum Equity retains controlling stake", hfBacked:false, tags:["tech"] },
+  { company:"Inspire Brands", sector:"Restaurant Chains", hq:"United States", sponsors:[{name:"Roark Capital",lead:true,hf:false}], status:"private", hfBacked:false, tags:["services"] },
+  { company:"Medline Industries", sector:"Medical Supplies", hq:"United States", sponsors:[{name:"Blackstone",lead:false,hf:false},{name:"Carlyle",lead:false,hf:false},{name:"Hellman & Friedman",lead:false,hf:true}], status:"public", note:"Nasdaq: MDLN (IPO Dec 2025) — PE sponsors doing secondary sales", hfBacked:true, tags:["services"] },
+  { company:"National Veterinary Associates", sector:"Veterinary Care", hq:"United States", sponsors:[{name:"JAB Holding Company",lead:true,hf:false}], status:"private", hfBacked:false, tags:["services"] },
+  { company:"PointClickCare", sector:"Long-Term Care Software", hq:"Canada", sponsors:[{name:"Hellman & Friedman",lead:false,hf:true},{name:"JMI Equity",lead:false,hf:false},{name:"Dragoneer",lead:false,hf:false}], status:"private", hfBacked:true, tags:["tech"] },
+  { company:"Qualtrics", sector:"Experience Management", hq:"United States", sponsors:[{name:"Silver Lake",lead:true,hf:false},{name:"CPP Investments",lead:false,hf:false}], status:"private", hfBacked:false, tags:["tech"] },
+  { company:"Securitas Direct / Verisure", sector:"Home Security", hq:"Switzerland", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"GIC",lead:false,hf:false}], status:"private", hfBacked:true, tags:["services"] },
+  { company:"STACK Infrastructure", sector:"Data Centers", hq:"United States", sponsors:[{name:"Blue Owl Digital Infrastructure",lead:true,hf:false}], status:"private", hfBacked:false, tags:["tech"] },
+  { company:"UKG", sector:"HR & Workforce Software", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"Blackstone",lead:false,hf:false}], status:"private", hfBacked:true, tags:["tech"] },
+  { company:"Worldpay", sector:"Payments Processing", hq:"United States", sponsors:[{name:"GTCR (sold Jan 2026)",lead:true,hf:false}], status:"exited", note:"Acquired by Global Payments for $24.25B · Jan 2026", hfBacked:false, tags:["tech","services"] },
+  { company:"Zendesk", sector:"Customer Service Software", hq:"United States", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"Permira",lead:true,hf:false}], status:"private", hfBacked:true, tags:["tech"] },
+  { company:"Zooplus", sector:"Pet E-Commerce", hq:"Germany", sponsors:[{name:"Hellman & Friedman",lead:true,hf:true},{name:"EQT",lead:true,hf:false}], status:"private", hfBacked:true, tags:["services"] }
+];
+
+const COLORS=['#143D6B','#6A90D2','#7B4C71','#E6443F','#C086A0','#717B4C','#C7C98D','#BA9659'];
+let activeChip='all', activeFirm=null;
+
+function buildLeague(){
+  const map={};
+  DATA.forEach(d=>d.sponsors.forEach(s=>{if(!map[s.name])map[s.name]=0;map[s.name]++;}));
+  let arr=Object.entries(map).map(([n,c])=>({name:n,count:c,isHF:n==="Hellman & Friedman",isMember:n==="Hellman & Friedman"})).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
+  const max=arr[0].count;
+  document.getElementById('leagueRows').innerHTML=arr.slice(0,20).map((f,i)=>{
+    const col=f.isHF?'#c8a100':COLORS[i%COLORS.length];
+    const pct=Math.round(f.count/max*100);
+    return `<div class="league-row" onclick="toggleFirm('${f.name.replace(/'/g,"\\'")}')">
+      <div class="league-rank">${i+1}</div>
+      <div class="league-firm${f.isHF?' hf-firm':''}">${f.name}</div>
+      ${f.isMember?'<div class="member-tag">Member</div>':''}
+      <div class="league-bar-wrap"><div class="league-bar"><div class="league-bar-fill" style="width:${pct}%;background:${col};"></div></div></div>
+      <div class="league-count">${f.count}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFirm(name){
+  if(activeFirm===name){activeFirm=null;document.getElementById('searchInput').value='';}
+  else{activeFirm=name;document.getElementById('searchInput').value=name;}
+  filterTable();
+}
+
+function buildRow(d){
+  const chips=d.sponsors.map(s=>`<span class="pe-chip ${s.hf?'hf':s.lead?'lead':'secondary'}">${s.name}</span>`).join('');
+  const badge={private:'<span class="status-badge private">Private</span>',public:'<span class="status-badge public">Public ↗</span>',exited:'<span class="status-badge exited">PE Exited</span>'}[d.status]||'';
+  const note=d.note?`<div class="note-text">${d.note}</div>`:'';
+  return `<tr class="company-row" data-hf="${d.hfBacked}" data-status="${d.status}" data-tags="${d.tags.join(',')}"
+    data-search="${(d.company+' '+d.sector+' '+d.sponsors.map(s=>s.name).join(' ')).toLowerCase()}">
+    <td><div class="company-name">${d.company}</div><div class="company-hq">📍 ${d.hq}</div></td>
+    <td><div class="company-sector">${d.sector}</div></td>
+    <td><div class="pe-firms-cell">${chips}</div>${note}</td>
+    <td>${badge}</td>
+  </tr>`;
+}
+
+let sortedData=[...DATA].sort((a,b)=>a.company.localeCompare(b.company));
+
+function sortTable(key){
+  const k=key||'alpha';
+  if(k==='alpha') sortedData.sort((a,b)=>a.company.localeCompare(b.company));
+  else if(k==='sponsors') sortedData.sort((a,b)=>b.sponsors.length-a.sponsors.length);
+  else if(k==='sector') sortedData.sort((a,b)=>a.sector.localeCompare(b.sector));
+  else if(k==='status') sortedData.sort((a,b)=>a.status.localeCompare(b.status));
+  filterTable();
+}
+
+function setChip(f,el){
+  activeChip=f;
+  document.querySelectorAll('.chip-filter').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('searchInput').value='';
+  activeFirm=null;
+  filterTable();
+}
+
+function filterTable(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const filtered=sortedData.filter(d=>{
+    if(activeChip==='hf'&&!d.hfBacked) return false;
+    if(activeChip==='private'&&d.status!=='private') return false;
+    if(activeChip==='public'&&d.status!=='public') return false;
+    if(activeChip==='tech'&&!d.tags.includes('tech')) return false;
+    if(activeChip==='services'&&!d.tags.includes('services')) return false;
+    if(q&&!d['data-search']){
+      const hay=(d.company+' '+d.sector+' '+d.sponsors.map(s=>s.name).join(' ')).toLowerCase();
+      return hay.includes(q);
+    }
+    return true;
+  });
+  document.getElementById('tableBody').innerHTML=filtered.map(buildRow).join('');
+  const n=filtered.length;
+  document.getElementById('resultsInfo').innerHTML=`Showing <strong>${n}</strong> of ${DATA.length} companies`;
+  document.getElementById('section-count').textContent=`${n} companies`;
+  document.getElementById('noResults').style.display=n===0?'block':'none';
+}
+
+buildLeague();
+filterTable();
+</script>
+</body>
+</html>
